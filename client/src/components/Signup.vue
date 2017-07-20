@@ -40,7 +40,7 @@
 </template>
 
 <script>
-// import axios from 'axios'
+
 export default {
      name: 'signup',
      data () {
@@ -72,6 +72,7 @@ export default {
                          }
                          self.status = true
                          self.reset()
+                         alert('Anda Berhasil Sign Up, Silahkan Login ....')
                          self.$router.push('/')
                     })
                     .catch((err) => {
