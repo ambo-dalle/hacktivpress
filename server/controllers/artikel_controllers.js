@@ -23,22 +23,39 @@ var findAllArtikel = (req,res,next) =>{
      })
 }
 
-var updateArtikel =  (req,res,next)=>{
-     Artikel.findById(req.params.id, (err,response)=>{
-          Artikel.updateOne({
-               _id : response._id
-          }, {
-               set: {
-                    title: req.body.title || response.title,
-                    content : req.body.content || response.content,
-                    category : req.body.category || response.category,
-                    author: req.body.author || response.author
-               }
-          }, (err, result) => {
-               if(err) res.send(err)
+var findOneArtikel = (req,res,next) => {
+     Artikel.findOne({_id: req.params.id})
+     .populate('User')
+     .exec(function(err, result) {
+          if(result) {
                res.send(result)
-          })
+          } else {
+               res.send(err)
+          }
      })
+}
+
+
+var updateArtikel = (req, res,next)=>{
+  Artikel.findById(req.params.id, (err, docs) => {
+   if (err) res.send(err)
+   Artikel.updateOne({
+      _id: docs._id
+   }, {
+      $set: {
+           title : req.body.title || docs.title,
+           content : req.body.content || docs.content,
+           category : req.body.category || docs.category,
+           author: req.body.author || docs.author
+      }
+   }, (err, result) => {
+      if (err) res.send(err)
+      res.send({
+           result : result,
+           msg : "Update Successfull"
+      })
+   })
+  })
 }
 
 var deleteArtikel = (req,res,next) =>{
@@ -46,7 +63,10 @@ var deleteArtikel = (req,res,next) =>{
           if (err) {
                console.log(err.message);
           } else {
-               res.send(docs)
+               res.send({
+                    docs: docs,
+                    msg: "Delete Successfull"
+               })
           }
      })
 }
@@ -55,6 +75,7 @@ var deleteArtikel = (req,res,next) =>{
 module.exports = {
      insertArtikel,
      findAllArtikel,
+     findOneArtikel,
      deleteArtikel,
      updateArtikel
 }

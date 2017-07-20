@@ -49,7 +49,7 @@ var SignIn = (req, res)=>{
           id : result._id,
           name : result.name,
           email : result.email,
-        }, 'secret')
+        }, process.env.JWT_SECRET)
         res.send({
           token : token
         })
