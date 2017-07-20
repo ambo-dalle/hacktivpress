@@ -25,7 +25,21 @@
 </template>
 <script>
 export default{
-  name: 'Navbar'
+  name: 'Navbar',
+  data () {
+   return {
+      message: '',
+      status: ''
+   }
+  },
+  methods: {
+   logout () {
+      this.status = true
+      localStorage.removeItem('data')
+      localStorage.removeItem('token')
+      this.$router.push('/')
+   }
+  }
 
 }
 </script>
