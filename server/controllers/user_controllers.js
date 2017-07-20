@@ -65,8 +65,71 @@ var SignIn = (req, res)=>{
   })
 }
 
+var findAllUsers = (req,res,next)=>{
+     User.find(function(err, result){
+          if(result) {
+               res.send({
+                    result : result,
+                    msg : 'Successfull get All User'
+               })
+          } else {
+               res.send(err.message)
+          }
+     })
+}
+
+var deleteUser = (req,res,next) =>{
+     User.remove({_id:req.params.id}, (err,result)=>{
+          if (err) {
+               console.log(err.message);
+          } else {
+               res.send({
+                    result : result ,
+                    msg : "Delete User Successfull"
+               })
+          }
+     })
+}
+
+var findOneUser = (req,res,next)=>{
+     User.findOne({ _id: req.params.id}, function(err, result) {
+          if (err) {
+               res.send(err.message)
+          } else {
+               res.send({
+                    result : result
+               })
+          }
+     })
+}
+
+var updateUser = (req, res,next)=>{
+  User.findById(req.params.id, (err, docs) => {
+   if (err) res.send(err)
+   User.updateOne({
+      _id: docs._id
+   }, {
+      $set: {
+           name : req.body.name || docs.name,
+           email : req.body.email || docs.email,
+           password : req.body.password || docs.password
+      }
+   }, (err, result) => {
+      if (err) res.send(err)
+      res.send({
+           result : result,
+           msg : "Update Successfull"
+      })
+   })
+  })
+}
+
 
 module.exports = {
      Signup,
-     SignIn
+     SignIn,
+     findAllUsers,
+     findOneUser,
+     deleteUser,
+     updateUser
 }
